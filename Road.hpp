@@ -10,11 +10,7 @@
 class Road : public CatanObject {
     public:
     Road();
-    void load(int road_id, owner owner, CatanObject* neighborhood[6]){
-        this->setId(road_id);
-        this->setOwner(owner);
-        this->setNeighborhood(neighborhood);
-    }
-    string occupationAtempt(owner player);
+    void load(int road_id, owner owner, CatanObject* neighborhood[6]);
+    bool occupationAtempt(owner player);
     string toString();
 };

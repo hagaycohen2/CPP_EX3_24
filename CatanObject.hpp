@@ -2,10 +2,10 @@
 #include <string>
 using std::string;
 
-enum owner { NONE,
+enum owner { YELLOW,
              BLUE,
              RED,
-             YELLOW };
+             NONE };
 enum resource { STONE,
                 WOOD,
                 BRICK,
@@ -37,9 +37,11 @@ class CatanObject {
             this->neighborhood[i] = neighborhood[i];
         }
     }
+    CatanObject** getNeighborhood() {
+        return this->neighborhood;
+    }
 
    public:
-    CatanObject();
     owner getOwner() {
         return this->objowner;
     }
@@ -47,6 +49,6 @@ class CatanObject {
         return this->id;
     }
 
-    virtual string occupationAtempt(owner player) = 0;
+    virtual bool occupationAtempt(owner player) = 0;
     virtual string toString() = 0;
 };

@@ -1,5 +1,6 @@
-#include "CatanObject.hpp"
 #include <vector>
+
+#include "CatanObject.hpp"
 
 // using std::vector;
 using std::pair;
@@ -15,25 +16,18 @@ using std::pair;
  */
 
 class Settlement : public CatanObject {
-    private:
+   private:
     pair<int, resource> resources[3];
     bool isCity;
 
-    public:
+   public:
     Settlement();
-    void load(int id, owner objowner, CatanObject* neighborhood[6], pair<int, resource> resources[3], bool isCity){
-        this->setId(id);
-        this->setOwner(objowner);
-        this->setNeighborhood(neighborhood);
-        for (int i = 0; i < 3; i++) {
-            this->resources[i] = resources[i];
-        }
-        this->isCity = isCity;
-    }
-    string occupationAtempt(owner player);
-    string toString();
-    bool getIsCity() {
-        return this->isCity;
-    }
 
+    void load(int id, owner objowner, CatanObject* neighborhood[6], pair<int, resource> resources[3]);
+    bool occupationAtempt(owner player);
+    string toString();
+
+    pair<int, resource>* getResources() { return this->resources; }
+    bool getIsCity() { return this->isCity; }
+    void setIsCity(bool isCity) { this->isCity = isCity; }
 };
