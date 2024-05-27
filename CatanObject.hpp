@@ -18,7 +18,6 @@ enum resource { STONE,
  * The objects Settlement and Road will inherit from this class.
  * The class contains an owner attribute that will be used to determine the owner of the object.
  * And a neiborhood attribute of all catan objects that are adjacent to the object.
- * 
  */
 class CatanObject {
    private:
