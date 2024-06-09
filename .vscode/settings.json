@@ -3,5 +3,12 @@
     "vector": "cpp",
     "ostream": "cpp",
     "string": "cpp"
-  }
+  },
+  "makefile.launchConfigurations": [
+    {
+      "cwd": "/home/hagaycohen2/sp2/cpp_ex3/CPP_EX3_24",
+      "binaryPath": "/home/hagaycohen2/sp2/cpp_ex3/CPP_EX3_24/main",
+      "binaryArgs": []
+    }
+  ]
 }

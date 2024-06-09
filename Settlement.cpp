@@ -1,25 +1,27 @@
 #include "Settlement.hpp"
 
-void Settlement::load(int id, owner objowner, CatanObject* neighborhood[6], pair<int, resource> resources[3]) {
+void Settlement::load(int id, owner objowner, CatanObject* s1, CatanObject* s2, CatanObject* s3, CatanObject* r1, CatanObject* r2, CatanObject* r3,
+                      pair<int, resource> p1, pair<int, resource> p2, pair<int, resource> p3) {
     this->setId(id);
     this->setOwner(objowner);
+    CatanObject* neighborhood[] = {s1, s2, s3, r1, r2, r3};
     this->setNeighborhood(neighborhood);
-    for (int i = 0; i < 3; i++) {
-        this->resources[i] = resources[i];
-    }
+    this->resources[0] = p1;
+    this->resources[1] = p2;
+    this->resources[2] = p3;
     this->isCity = false;
 }
 
 bool Settlement::occupationAtempt(owner player) {
-    if (this->getOwner() != NONE) {
+    if (this->getOwner() != EMPTY) {
         return false;
     }
-    
+
     CatanObject** neighborhood = this->getNeighborhood();
 
     // Check if the adjacent settlements are empty
     for (int i = 0; i < 3; i++) {
-        if (neighborhood[i] != nullptr && neighborhood[i]->getOwner() != NONE) {
+        if (neighborhood[i] != nullptr && neighborhood[i]->getOwner() != EMPTY) {
             return false;
         }
     }

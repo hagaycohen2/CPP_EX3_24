@@ -1,7 +1,13 @@
+#pragma once
+
 #include "Player.hpp"
+#include "iostream"
 
 using std::string;
 using std::vector;
+using std::pair;
+using std::cout;
+using std::endl;
 
 class CatanGame{
     private:
@@ -14,27 +20,28 @@ class CatanGame{
 
     void init();
     void shuffleCards();
+    void displayBoard();
 
     void prepRound();
 
     int diceRoll();
     void distributeResources(int dice);
 
-    bool buildSettlement(owner player, int settlement_id);
-    bool buildRoad(owner player, int road_id);
-    bool buildCity(owner player, int settlement_id);
+    // bool buildSettlement(owner player, int settlement_id);
+    // bool buildRoad(owner player, int road_id);
+    // bool buildCity(owner player, int settlement_id);
 
-    bool buyCard(owner player);
-    void playCard(owner player, Card card);
+    // bool buyCard(owner player);
+    // void playCard(owner player, Card card);
 
-    bool makeAnOffer(owner player, resource give, resource receive);
-    bool makeTrade(owner player, resource give, resource receive);
+    // bool makeAnOffer(owner player, resource give, resource receive);
+    // bool makeTrade(owner player, resource give, resource receive);
 
-    bool victroryCheck(owner player);
-    void displayBoard();
+    // bool victroryCheck(owner player);
 
 
     
+
 
     public:
     CatanGame();

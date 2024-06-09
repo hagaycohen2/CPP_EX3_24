@@ -1,13 +1,14 @@
 #include "Road.hpp"
 
-void Road::load(int road_id, owner owner, CatanObject* neighborhood[6]) {
+void Road::load(int road_id, owner owner, CatanObject* s1, CatanObject* s2, CatanObject* r1, CatanObject* r2, CatanObject* r3, CatanObject* r4) {
     this->setId(road_id);
     this->setOwner(owner);
+    CatanObject* neighborhood[] = {s1, s2, r1, r2, r3, r4};
     this->setNeighborhood(neighborhood);
 }
 
 bool Road::occupationAtempt(owner player) {
-    if (this->getOwner() != NONE) {
+    if (this->getOwner() != EMPTY) {
         return false;
     }
 
@@ -25,7 +26,7 @@ bool Road::occupationAtempt(owner player) {
 
     // if none of the adjacent settlements are owned by the player,
     // check if at least one of the adjacent roads is owned by the player and the settlement between them is empty
-    if (neighborhood[0]->getOwner() == NONE) {
+    if (neighborhood[0]->getOwner() == EMPTY) {
         if (neighborhood[2] != nullptr && neighborhood[2]->getOwner() == player) {
             this->setOwner(player);
             return true;
@@ -35,7 +36,7 @@ bool Road::occupationAtempt(owner player) {
             return true;
         }
     }
-    if (neighborhood[1]->getOwner() == NONE) {
+    if (neighborhood[1]->getOwner() == EMPTY) {
         if (neighborhood[4] != nullptr && neighborhood[4]->getOwner() == player) {
             this->setOwner(player);
             return true;

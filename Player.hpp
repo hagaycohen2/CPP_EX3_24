@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Road.hpp"
 #include "Settlement.hpp"
 #include "Card.hpp"
@@ -14,7 +16,8 @@ class Player {
 
 
     public:
-    Player(owner id);
+    Player();
+    void setId(owner id);
     int getTotResources();
     void displayResources();
     void displayCards();

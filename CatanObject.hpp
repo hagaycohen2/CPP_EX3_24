@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 using std::string;
@@ -5,7 +7,7 @@ using std::string;
 enum owner { YELLOW,
              BLUE,
              RED,
-             NONE };
+             EMPTY };
 enum resource { STONE,
                 WOOD,
                 BRICK,
@@ -32,11 +34,8 @@ class CatanObject {
     void setId(int new_id) {
         this->id = new_id;
     }
-    void setNeighborhood(CatanObject* neighborhood[6]) {
-        for (int i = 0; i < 6; i++) {
-            this->neighborhood[i] = neighborhood[i];
-        }
-    }
+    void setNeighborhood(CatanObject* neighborhood[6]);
+
     CatanObject** getNeighborhood() {
         return this->neighborhood;
     }
@@ -48,7 +47,8 @@ class CatanObject {
     int getId() {
         return this->id;
     }
+    string getColor();
 
     virtual bool occupationAtempt(owner player) = 0;
-    virtual string toString() = 0;
+    // virtual string toString() = 0;
 };

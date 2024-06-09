@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 #include "CatanObject.hpp"
@@ -21,11 +23,11 @@ class Settlement : public CatanObject {
     bool isCity;
 
    public:
-    Settlement();
 
-    void load(int id, owner objowner, CatanObject* neighborhood[6], pair<int, resource> resources[3]);
+    void load(int id, owner objowner, CatanObject* s1, CatanObject* s2, CatanObject* s3, CatanObject* r1, CatanObject* r2, CatanObject* r3,
+              pair<int, resource> p1, pair<int, resource> p2, pair<int, resource> p3);
     bool occupationAtempt(owner player);
-    string toString();
+    // string toString();
 
     pair<int, resource>* getResources() { return this->resources; }
     bool getIsCity() { return this->isCity; }
