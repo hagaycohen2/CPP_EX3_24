@@ -35,3 +35,4 @@ bool Settlement::occupationAtempt(owner player) {
     }
     return false;
 }
+

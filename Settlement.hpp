@@ -31,5 +31,6 @@ class Settlement : public CatanObject {
 
     pair<int, resource>* getResources() { return this->resources; }
     bool getIsCity() { return this->isCity; }
-    void setIsCity(bool isCity) { this->isCity = isCity; }
+    void setIsCity() { this->isCity = true; }
+    string getChar() { return this->isCity ? " █ " : " ▄ "; }
 };
