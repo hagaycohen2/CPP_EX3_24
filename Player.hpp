@@ -6,6 +6,7 @@
 #include <vector>
 
 using std::vector;
+using std::string;
 
 class Player {
     private:
@@ -17,11 +18,15 @@ class Player {
 
     public:
     Player();
-    void setId(owner id);
     int getTotResources();
     void displayResources();
     void displayCards();
+    string getColor();
+    string getOwner();
 
+    void setId(owner id){
+        this->id = id;
+    }
     void addCard(Card& card){
          cards.push_back(card); 
     }
@@ -43,4 +48,5 @@ class Player {
     owner getId(){
         return this->id;
     }
+    
 };

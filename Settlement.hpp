@@ -6,6 +6,9 @@
 
 // using std::vector;
 using std::pair;
+using std::string;
+using std::cout;
+using std::endl;
 
 /**
  * Settlement is a class that represents a settlement in the game.
@@ -27,7 +30,9 @@ class Settlement : public CatanObject {
     void load(int id, owner objowner, CatanObject* s1, CatanObject* s2, CatanObject* s3, CatanObject* r1, CatanObject* r2, CatanObject* r3,
               pair<int, resource> p1, pair<int, resource> p2, pair<int, resource> p3);
     bool occupationAtempt(owner player);
-    // string toString();
+    bool preOccupationAtempt(owner player);
+    
+
 
     pair<int, resource>* getResources() { return this->resources; }
     bool getIsCity() { return this->isCity; }

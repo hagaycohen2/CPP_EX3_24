@@ -13,5 +13,4 @@ class Road : public CatanObject {
     public:
     void load(int road_id, owner owner, CatanObject* s1 , CatanObject* s2, CatanObject* r1, CatanObject* r2, CatanObject* r3, CatanObject* r4);
     bool occupationAtempt(owner player);
-    // string toString();
 };

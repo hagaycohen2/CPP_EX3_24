@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Player.hpp"
+#include "CatanObject.hpp"
 #include "iostream"
 
 using std::string;
@@ -8,6 +9,8 @@ using std::vector;
 using std::pair;
 using std::cout;
 using std::endl;
+using std::swap;
+using std::cin;
 
 class CatanGame{
     private:
@@ -26,18 +29,19 @@ class CatanGame{
 
     int diceRoll();
     void distributeResources(int dice);
+    void addPayment(owner player, pair<int, resource>* resourceVec);
 
-    // bool buildSettlement(owner player, int settlement_id);
-    // bool buildRoad(owner player, int road_id);
-    // bool buildCity(owner player, int settlement_id);
+    bool buildSettlement(owner player, int settlement_id);
+    bool buildRoad(owner player, int road_id);
+    bool buildCity(owner player, int settlement_id);
 
-    // bool buyCard(owner player);
-    // void playCard(owner player, Card card);
+    bool buyCard(owner player);
+    void playCard(owner player, type card);
 
-    // bool makeAnOffer(owner player, resource give, resource receive);
-    // bool makeTrade(owner player, resource give, resource receive);
+    bool makeAnOffer(owner player, resource give, resource receive);
+    bool makeTrade(owner player, resource give, resource receive);
 
-    // bool victroryCheck(owner player);
+    bool victroryCheck(owner player);
 
 
     

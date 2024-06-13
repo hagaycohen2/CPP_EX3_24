@@ -18,3 +18,20 @@ string CatanObject:: getColor() {
             return "\033[0m";
     }
 }
+
+string getResourceName(int res) {
+    switch (res) {
+        case STONE:
+            return " 🪨 ";
+        case WOOD:
+            return " 🪵 ";
+        case BRICK:
+            return " 🧱 ";
+        case SHEEP:
+            return " 🐑 ";
+        case WHEAT:
+            return " 🌾 ";
+        default:
+            return " 🌵 ";
+    }
+}

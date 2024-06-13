@@ -1,4 +1,6 @@
 #include "CatanGame.hpp"
+#include "Card.hpp"
+#include "CatanObject.hpp"
 
 CatanGame::CatanGame() {
     players[0].setId(owner::YELLOW);
@@ -6,7 +8,6 @@ CatanGame::CatanGame() {
     players[2].setId(owner::RED);
 }
 
-// TODO: cards initialization
 void CatanGame::init() {
     for (int i = 0; i < 3; i++) {
         knightCount[i] = 0;
@@ -15,6 +16,10 @@ void CatanGame::init() {
     for (int i = 0; i < 11; i++) {
         payment[i] = {};
     }
+
+    cards = {KnightCard(), KnightCard(), KnightCard(), VictoryPointCard(), VictoryPointCard(), VictoryPointCard(),
+             VictoryPointCard(), RoadBuildingCard(), RoadBuildingCard(), MonopolyCard(), MonopolyCard(),
+             YearOfPlentyCard(), YearOfPlentyCard()};
 
     settlements[0].load(0, owner::EMPTY, nullptr, &settlements[4], &settlements[3], nullptr, &roads[1], &roads[0],
                         {10, resource::STONE}, {0, resource::NONE}, {0, resource::NONE});
@@ -199,39 +204,81 @@ void CatanGame::init() {
     roads[71].load(71, owner::EMPTY, &settlements[50], &settlements[53], &roads[65], nullptr, &roads[70], nullptr);
 }
 
-// TODO: shuffle cards
 void CatanGame::shuffleCards() {
+    for (int i = 0; i < cards.size(); i++) {
+        int j = rand() % cards.size();
+        cards.push_back(cards[j]);
+        cards[j] = cards[i];
+        cards[i] = cards.back();
+        cards.pop_back();
+    }
 }
 
-// TODO: display board
 void CatanGame::displayBoard() {
     cout << "                  " << settlements[0].getColor() << settlements[0].getChar() << "         " << settlements[1].getColor() << settlements[1].getChar() << "         " << settlements[2].getColor() << settlements[2].getChar() << endl;
     cout << "               " << roads[0].getColor() << " / " << "   " << roads[1].getColor() << " \\ " << "   " << roads[2].getColor() << " / " << "   " << roads[3].getColor() << " \\ " << "   " << roads[4].getColor() << " / " << "   " << roads[5].getColor() << " \\ " << endl;
     cout << "            " << settlements[3].getColor() << settlements[3].getChar() << "         " << settlements[4].getColor() << settlements[4].getChar() << "         " << settlements[5].getColor() << settlements[5].getChar() << "         " << settlements[6].getColor() << settlements[6].getChar() << endl;
-    cout << "            " << roads[6].getColor() << " | " << "         " << roads[7].getColor() << " | " << "         " << roads[8].getColor() << " | " << "         " << roads[9].getColor() << " | " << endl;
+    cout << "            " << roads[6].getColor() << " | "  << "\033[0m" << getResourceName(STONE) << "  10  " << roads[7].getColor() << " | " << "\033[0m" << getResourceName(SHEEP)<<"  2  "<< roads[8].getColor() << " | " << "\033[0m" << getResourceName(WOOD) << "  9   " << roads[9].getColor() << " | " << endl;
     cout << "            " << settlements[7].getColor() << settlements[7].getChar() << "         " << settlements[8].getColor() << settlements[8].getChar() << "         " << settlements[9].getColor() << settlements[9].getChar() << "         " << settlements[10].getColor() << settlements[10].getChar() << endl;
     cout << "         " << roads[10].getColor() << " / " << "   " << roads[11].getColor() << " \\ " << "   " << roads[12].getColor() << " / " << "   " << roads[13].getColor() << " \\ " << "   " << roads[14].getColor() << " / " << "   " << roads[15].getColor() << " \\ " << "   " << roads[16].getColor() << " / " << "   " << roads[17].getColor() << " \\ " << endl;
     cout << "      " << settlements[11].getColor() << settlements[11].getChar() << "         " << settlements[12].getColor() << settlements[12].getChar() << "         " << settlements[13].getColor() << settlements[13].getChar() << "         " << settlements[14].getColor() << settlements[14].getChar() << "         " << settlements[15].getColor() << settlements[15].getChar() << endl;
-    cout << "      " << roads[18].getColor() << " | " << "         " << roads[19].getColor() << " | " << "         " << roads[20].getColor() << " | " << "         " << roads[21].getColor() << " | " << "         " << roads[22].getColor() << " | " << endl;
+    cout << "      " << roads[18].getColor() << " | " << "\033[0m" << getResourceName(WHEAT) << "  12 " << roads[19].getColor() << " | " << "\033[0m" << getResourceName(BRICK) << "  6  " << roads[20].getColor() << " | " << "\033[0m" << getResourceName(SHEEP) << "  4  " << roads[21].getColor() << " | " << "\033[0m" << getResourceName(BRICK) << "  10 " << roads[22].getColor() << " | " << endl;
     cout << "      " << settlements[16].getColor() << settlements[16].getChar() << "         " << settlements[17].getColor() << settlements[17].getChar() << "         " << settlements[18].getColor() << settlements[18].getChar() << "         " << settlements[19].getColor() << settlements[19].getChar() << "         " << settlements[20].getColor() << settlements[20].getChar() << endl;
     cout << "   " << roads[23].getColor() << " / " << "   " << roads[24].getColor() << " \\ " << "   " << roads[25].getColor() << " / " << "   " << roads[26].getColor() << " \\ " << "   " << roads[27].getColor() << " / " << "   " << roads[28].getColor() << " \\ " << "   " << roads[29].getColor() << " / " << "   " << roads[30].getColor() << " \\ " << "   " << roads[31].getColor() << " / " << "   " << roads[32].getColor() << " \\ " << endl;
     cout << settlements[21].getColor() << settlements[21].getChar() << "         " << settlements[22].getColor() << settlements[22].getChar() << "         " << settlements[23].getColor() << settlements[23].getChar() << "         " << settlements[24].getColor() << settlements[24].getChar() << "         " << settlements[25].getColor() << settlements[25].getChar() << "         " << settlements[26].getColor() << settlements[26].getChar() << endl;
-    cout << roads[33].getColor() << " | " << "         " << roads[34].getColor() << " | " << "         " << roads[35].getColor() << " | " << "         " << roads[36].getColor() << " | " << "         " << roads[37].getColor() << " | " << "         " << roads[38].getColor() << " | " << endl;
+    cout << roads[33].getColor() << " | " << "\033[0m" << getResourceName(WHEAT) << "  9  " << roads[34].getColor() << " | " << "\033[0m" << getResourceName(WOOD) << "  11  " << roads[35].getColor() << " | " << "\033[0m" << getResourceName(NONE) << "  7  " << roads[36].getColor() << " | " << "\033[0m" << getResourceName(WOOD) << "  3   " << roads[37].getColor() << " | " << "\033[0m" << getResourceName(STONE) << "  8   " << roads[38].getColor() << " | " << endl;
     cout << settlements[27].getColor() << settlements[27].getChar() << "         " << settlements[28].getColor() << settlements[28].getChar() << "         " << settlements[29].getColor() << settlements[29].getChar() << "         " << settlements[30].getColor() << settlements[30].getChar() << "         " << settlements[31].getColor() << settlements[31].getChar() << "         " << settlements[32].getColor() << settlements[32].getChar() << endl;
     cout << "   " << roads[39].getColor() << " \\ " << "   " << roads[40].getColor() << " / " << "   " << roads[41].getColor() << " \\ " << "   " << roads[42].getColor() << " / " << "   " << roads[43].getColor() << " \\ " << "   " << roads[44].getColor() << " / " << "   " << roads[45].getColor() << " \\ " << "   " << roads[46].getColor() << " / " << "   " << roads[47].getColor() << " \\ " << "   " << roads[48].getColor() << " / " << endl;
     cout << "      " << settlements[33].getColor() << settlements[33].getChar() << "         " << settlements[34].getColor() << settlements[34].getChar() << "         " << settlements[35].getColor() << settlements[35].getChar() << "         " << settlements[36].getColor() << settlements[36].getChar() << "         " << settlements[37].getColor() << settlements[37].getChar() << endl;
-    cout << "      " << roads[49].getColor() << " | " << "         " << roads[50].getColor() << " | " << "         " << roads[51].getColor() << " | " << "         " << roads[52].getColor() << " | " << "         " << roads[53].getColor() << " | " << endl;
+    cout << "      " << roads[49].getColor() << " | " << "\033[0m" << getResourceName(WOOD) << "  8   " << roads[50].getColor() << " | " << "\033[0m" << getResourceName(STONE) << "  3   " << roads[51].getColor() << " | " << "\033[0m" << getResourceName(WHEAT) << "  4  " << roads[52].getColor() << " | " << "\033[0m" << getResourceName(SHEEP) << "  5  " << roads[53].getColor() << " | " << endl;
     cout << "      " << settlements[38].getColor() << settlements[38].getChar() << "         " << settlements[39].getColor() << settlements[39].getChar() << "         " << settlements[40].getColor() << settlements[40].getChar() << "         " << settlements[41].getColor() << settlements[41].getChar() << "         " << settlements[42].getColor() << settlements[42].getChar() << endl;
     cout << "         " << roads[54].getColor() << " \\ " << "   " << roads[55].getColor() << " / " << "   " << roads[56].getColor() << " \\ " << "   " << roads[57].getColor() << " / " << "   " << roads[58].getColor() << " \\ " << "   " << roads[59].getColor() << " / " << "   " << roads[60].getColor() << " \\ " << "   " << roads[61].getColor() << " / " << endl;
     cout << "            " << settlements[43].getColor() << settlements[43].getChar() << "         " << settlements[44].getColor() << settlements[44].getChar() << "         " << settlements[45].getColor() << settlements[45].getChar() << "         " << settlements[46].getColor() << settlements[46].getChar() << endl;
-    cout << "            " << roads[62].getColor() << " | " << "         " << roads[63].getColor() << " | " << "         " << roads[64].getColor() << " | " << "         " << roads[65].getColor() << " | " << endl;
+    cout << "            " << roads[62].getColor() << " | " << "\033[0m" << getResourceName(BRICK) << "  5  " << roads[63].getColor() << " | " << "\033[0m" << getResourceName(WHEAT) << "  6  " << roads[64].getColor() << " | " << "\033[0m" << getResourceName(SHEEP) << "  11 " << roads[65].getColor() << " | " << endl;
     cout << "            " << settlements[47].getColor() << settlements[47].getChar() << "         " << settlements[48].getColor() << settlements[48].getChar() << "         " << settlements[49].getColor() << settlements[49].getChar() << "         " << settlements[50].getColor() << settlements[50].getChar() << endl;
     cout << "               " << roads[66].getColor() << " \\ " << "   " << roads[67].getColor() << " / " << "   " << roads[68].getColor() << " \\ " << "   " << roads[69].getColor() << " / " << "   " << roads[70].getColor() << " \\ " << "   " << roads[71].getColor() << " / " << endl;
     cout << "                  " << settlements[51].getColor() << settlements[51].getChar() << "         " << settlements[52].getColor() << settlements[52].getChar() << "         " << settlements[53].getColor() << settlements[53].getChar() << endl;
 }
 
-// TODO: prep round
 void CatanGame::prepRound() {
+    cout << "Prepping round" << endl;
+    for (int j = 0; j < 6; j++) {
+        int i = j % 3;
+        cout << players[i].getColor() << players[i].getOwner() << "'s turn" << "\033[0m" << endl;
+        while (true) {
+            cout << "please place a settlement, insert settlement id: ";
+            int settlement;
+            cin >> settlement;
+            if (settlements[settlement].preOccupationAtempt(players[i].getId())) {
+                addPayment(players[i].getId(), settlements[settlement].getResources());
+                players[i].incrementVictoryPoints();
+                cout << "Settlement placed" << endl;
+                displayBoard();
+                break;
+            } else {
+                cout << "Settlement placement failed" << endl;
+            }
+        }
+        while (true) {
+            cout << "please place a road, insert road id: ";
+            int road;
+            cin >> road;
+            if (roads[road].occupationAtempt(players[i].getId())) {
+                cout << "Road placed" << endl;
+                displayBoard();
+                break;
+            } else {
+                cout << "Road placement failed" << endl;
+            }
+        }
+    }
+    for (int i = 2; i < 13; i++) {
+        distributeResources(i);
+    }
+    for (int i = 0; i < 3; i++) {
+        cout << players[i].getColor() << players[i].getOwner() << "'s display:" << "\033[0m" << endl;
+        players[i].displayResources();
+    }
 }
 
 int CatanGame::diceRoll() {
@@ -253,8 +300,24 @@ void CatanGame::distributeResources(int diceRoll) {
     }
 }
 
+void CatanGame::addPayment(owner player, pair<int, resource>* resourceVec) {
+    for (int i = 0; i < 3; i++) {
+        pair<owner, resource> paymentPair = {player, resourceVec[i].second};
+        payment[resourceVec[i].first -2].push_back(paymentPair);
+    }
+}
+
 int CatanGame::play() {
     init();
     displayBoard();
+    prepRound();
+    shuffleCards();
+    int tern = 0;
+    bool keepPlaying = true;
+    while (keepPlaying) {
+        tern = tern % 3;
+        // cout << players[tern].getColor() << players[tern].getOwner() << "'s turn" << "\033[0m" << endl;
+
+    }
     return 0;
 }

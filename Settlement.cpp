@@ -14,6 +14,7 @@ void Settlement::load(int id, owner objowner, CatanObject* s1, CatanObject* s2, 
 
 bool Settlement::occupationAtempt(owner player) {
     if (this->getOwner() != EMPTY) {
+        cout << "The settlement is already occupied" << endl;
         return false;
     }
 
@@ -22,6 +23,7 @@ bool Settlement::occupationAtempt(owner player) {
     // Check if the adjacent settlements are empty
     for (int i = 0; i < 3; i++) {
         if (neighborhood[i] != nullptr && neighborhood[i]->getOwner() != EMPTY) {
+            cout << "There is an adjacent settlement that is already occupied" << endl;
             return false;
         }
     }
@@ -33,6 +35,28 @@ bool Settlement::occupationAtempt(owner player) {
             return true;
         }
     }
+    cout << "The settlement is not connected to any of the player's assets" << endl;
     return false;
 }
+
+bool Settlement::preOccupationAtempt(owner player) {
+    if (this->getOwner() != EMPTY) {
+        cout << "The settlement is already occupied" << endl;
+        return false;
+    }
+
+    CatanObject** neighborhood = this->getNeighborhood();
+
+    // Check if the adjacent settlements are empty
+    for (int i = 0; i < 3; i++) {
+        if (neighborhood[i] != nullptr && neighborhood[i]->getOwner() != EMPTY) {
+            cout << "There is an adjacent settlement that is already occupied" << endl;
+            return false;
+        }
+    }
+    this->setOwner(player);
+    return true;
+}
+
+    
 

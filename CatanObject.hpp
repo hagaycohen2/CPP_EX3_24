@@ -15,6 +15,7 @@ enum resource { STONE,
                 WHEAT,
                 NONE };
 
+ string getResourceName(int res);
 /**
  * CatanObject is the base class for all objects in the game.
  * The objects Settlement and Road will inherit from this class.

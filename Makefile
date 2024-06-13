@@ -4,7 +4,7 @@ CXX = clang++
 CXXFLAGS = -std=c++11 -Wall -g
 RM = rm -f
 
-SOURCES =CatanObject.cpp Settlement.cpp Road.cpp Card.cpp Player.cpp CatanGame.cpp main.cpp
+SOURCES = CatanObject.cpp Settlement.cpp Road.cpp Card.cpp Player.cpp CatanGame.cpp main.cpp
 OBJECTS = $(SOURCES:.cpp=.o)
 
 run: main

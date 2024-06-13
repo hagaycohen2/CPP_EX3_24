@@ -1,5 +1,8 @@
 #include "Road.hpp"
 
+using std::cout;
+using std::endl;
+
 void Road::load(int road_id, owner owner, CatanObject* s1, CatanObject* s2, CatanObject* r1, CatanObject* r2, CatanObject* r3, CatanObject* r4) {
     this->setId(road_id);
     this->setOwner(owner);
@@ -9,6 +12,7 @@ void Road::load(int road_id, owner owner, CatanObject* s1, CatanObject* s2, Cata
 
 bool Road::occupationAtempt(owner player) {
     if (this->getOwner() != EMPTY) {
+        cout << "The road is already occupied" << endl;
         return false;
     }
 
@@ -47,5 +51,6 @@ bool Road::occupationAtempt(owner player) {
         }
     }
 
+    cout << "The road is not connected to any of the player's assets" << endl;
     return false;
 }
