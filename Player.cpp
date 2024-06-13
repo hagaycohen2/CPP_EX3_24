@@ -56,7 +56,14 @@ void Player::displayResources() {
 void Player::displayCards() {
     cout << "Player: " << this->getOwner() << "Cards: "<< endl;
     for (int i = 0; i < this->cards.size(); i++) {
+        cout << "Card " << i << ": ";
        this->cards[i].display() ;
     }
+}
+
+type Player::removeCard(int index) {
+    type temp = this->cards[index].getCardType();
+    this->cards.erase(this->cards.begin() + index);
+    return temp;
 }
 

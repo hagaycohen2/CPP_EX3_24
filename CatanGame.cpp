@@ -1,4 +1,5 @@
 #include "CatanGame.hpp"
+
 #include "Card.hpp"
 #include "CatanObject.hpp"
 
@@ -215,10 +216,16 @@ void CatanGame::shuffleCards() {
 }
 
 void CatanGame::displayBoard() {
+    cout << "Players status: " << endl;
+    for (int i = 0; i < 3; i++) {
+        Player player = players[i];
+        cout << player.getColor() << player.getOwner() << "\033[0m" << " has " << player.getVictoryPoints() << " victory points, and " << knightCount[i] << " knights." << endl;
+    }
+
     cout << "                  " << settlements[0].getColor() << settlements[0].getChar() << "         " << settlements[1].getColor() << settlements[1].getChar() << "         " << settlements[2].getColor() << settlements[2].getChar() << endl;
     cout << "               " << roads[0].getColor() << " / " << "   " << roads[1].getColor() << " \\ " << "   " << roads[2].getColor() << " / " << "   " << roads[3].getColor() << " \\ " << "   " << roads[4].getColor() << " / " << "   " << roads[5].getColor() << " \\ " << endl;
     cout << "            " << settlements[3].getColor() << settlements[3].getChar() << "         " << settlements[4].getColor() << settlements[4].getChar() << "         " << settlements[5].getColor() << settlements[5].getChar() << "         " << settlements[6].getColor() << settlements[6].getChar() << endl;
-    cout << "            " << roads[6].getColor() << " | "  << "\033[0m" << getResourceName(STONE) << "  10  " << roads[7].getColor() << " | " << "\033[0m" << getResourceName(SHEEP)<<"  2  "<< roads[8].getColor() << " | " << "\033[0m" << getResourceName(WOOD) << "  9   " << roads[9].getColor() << " | " << endl;
+    cout << "            " << roads[6].getColor() << " | " << "\033[0m" << getResourceName(STONE) << "  10  " << roads[7].getColor() << " | " << "\033[0m" << getResourceName(SHEEP) << "  2  " << roads[8].getColor() << " | " << "\033[0m" << getResourceName(WOOD) << "  9   " << roads[9].getColor() << " | " << endl;
     cout << "            " << settlements[7].getColor() << settlements[7].getChar() << "         " << settlements[8].getColor() << settlements[8].getChar() << "         " << settlements[9].getColor() << settlements[9].getChar() << "         " << settlements[10].getColor() << settlements[10].getChar() << endl;
     cout << "         " << roads[10].getColor() << " / " << "   " << roads[11].getColor() << " \\ " << "   " << roads[12].getColor() << " / " << "   " << roads[13].getColor() << " \\ " << "   " << roads[14].getColor() << " / " << "   " << roads[15].getColor() << " \\ " << "   " << roads[16].getColor() << " / " << "   " << roads[17].getColor() << " \\ " << endl;
     cout << "      " << settlements[11].getColor() << settlements[11].getChar() << "         " << settlements[12].getColor() << settlements[12].getChar() << "         " << settlements[13].getColor() << settlements[13].getChar() << "         " << settlements[14].getColor() << settlements[14].getChar() << "         " << settlements[15].getColor() << settlements[15].getChar() << endl;
@@ -275,16 +282,15 @@ void CatanGame::prepRound() {
     for (int i = 2; i < 13; i++) {
         distributeResources(i);
     }
-    for (int i = 0; i < 3; i++) {
-        cout << players[i].getColor() << players[i].getOwner() << "'s display:" << "\033[0m" << endl;
-        players[i].displayResources();
-    }
 }
 
 int CatanGame::diceRoll() {
     int dice1 = rand() % 6 + 1;
     int dice2 = rand() % 6 + 1;
     return dice1 + dice2;
+}
+
+void CatanGame::diceRoll_7() {
 }
 
 void CatanGame::distributeResources(int diceRoll) {
@@ -298,13 +304,260 @@ void CatanGame::distributeResources(int diceRoll) {
             players[RED].incrementResource(payment[diceRoll][i].second);
         }
     }
+    for (int i = 0; i < 3; i++) {
+        cout << players[i].getColor() << players[i].getOwner() << "'s display:" << "\033[0m" << endl;
+        players[i].displayResources();
+    }
 }
 
 void CatanGame::addPayment(owner player, pair<int, resource>* resourceVec) {
     for (int i = 0; i < 3; i++) {
         pair<owner, resource> paymentPair = {player, resourceVec[i].second};
-        payment[resourceVec[i].first -2].push_back(paymentPair);
+        payment[resourceVec[i].first - 2].push_back(paymentPair);
     }
+}
+
+bool CatanGame::buildSettlement(int playerId, int settlementId) {
+    Player player = players[playerId];
+    Settlement settlement = settlements[settlementId];
+    if (player.getResource(BRICK) > 0 && player.getResource(WOOD) > 0 && player.getResource(SHEEP) > 0 && player.getResource(WHEAT) > 0) {
+        bool occupied = settlement.occupationAtempt(player.getId());
+        if (occupied) {
+            player.decrementResource(BRICK);
+            player.decrementResource(WOOD);
+            player.decrementResource(SHEEP);
+            player.decrementResource(WHEAT);
+            player.incrementVictoryPoints();
+            addPayment(player.getId(), settlement.getResources());
+            displayBoard();
+            return true;
+        }
+    }
+    return false;
+}
+
+bool CatanGame::buildRoad(int playerId, int roadId) {
+    Player player = players[playerId];
+    Road road = roads[roadId];
+    if (player.getResource(BRICK) > 0 && player.getResource(WOOD) > 0) {
+        bool occupied = road.occupationAtempt(player.getId());
+        if (occupied) {
+            player.decrementResource(BRICK);
+            player.decrementResource(WOOD);
+            displayBoard();
+            return true;
+        }
+    }
+    return false;
+}
+
+bool CatanGame::buildCity(int playerId, int settlementId) {
+    Player player = players[playerId];
+    Settlement settlement = settlements[settlementId];
+    if (player.getResource(STONE) > 2 && player.getResource(WHEAT) > 1) {
+        if (settlement.getOwner() == player.getId() && settlement.getIsCity() == false) {
+            settlement.setIsCity();
+            player.decrementResource(STONE);
+            player.decrementResource(STONE);
+            player.decrementResource(STONE);
+            player.decrementResource(WHEAT);
+            player.decrementResource(WHEAT);
+            player.incrementVictoryPoints();
+            addPayment(player.getId(), settlement.getResources());
+            displayBoard();
+            return true;
+        }
+    }
+    return false;
+}
+
+bool CatanGame::buyCard(int playerId) {
+    if (cards.size() == 0) {
+        cout << "No more cards" << endl;
+        return false;
+    }
+    Player player = players[playerId];
+    if (player.getResource(SHEEP) > 0 && player.getResource(WHEAT) > 0 && player.getResource(STONE) > 0) {
+        player.decrementResource(SHEEP);
+        player.decrementResource(WHEAT);
+        player.decrementResource(STONE);
+        Card card = cards.back();
+        cards.pop_back();
+        player.addCard(card);
+        return true;
+    }
+    cout << "Not enough resources" << endl;
+    return false;
+}
+
+int CatanGame::getCardIndex(int playerId) {
+    Player player = players[playerId];
+    cout << "Your cards: " << endl;
+    player.displayCards();
+    cout << "Please enter the index of the card you want to play: ";
+    int index;
+    cin >> index;
+    if (index < 0 || index >= player.getCardCount()) {
+        cout << "Invalid index" << endl;
+        return -1;
+    }
+    return index;
+}
+
+void CatanGame::playCard(int playerId, type card) {
+    Player player = players[playerId];
+    switch (card) {
+        case KNIGHT:
+            knightCount[playerId]++;
+            if (knightCount[playerId] >= 3) {
+                player.incrementVictoryPoints();
+            }
+            break;
+        case VICTORY_POINT:
+            player.incrementVictoryPoints();
+            break;
+        case MONOPOLY:
+            playMonopoly(playerId);
+            break;
+        case ROAD_BUILDING:
+            playRoadBuilding(playerId);
+            break;
+        case YEAR_OF_PLENTY:
+            playYearOfPlenty(playerId);
+            break;
+        default:
+            break;
+    }
+    displayBoard();
+}
+
+void CatanGame::playMonopoly(int playerId) {
+}
+
+void CatanGame::playRoadBuilding(int playerId) {
+}
+
+void CatanGame::playYearOfPlenty(int playerId) {
+}
+
+resource CatanGame::intToResource(int res) {
+    switch (res) {
+        case 0:
+            return STONE;
+        case 1:
+            return WOOD;
+        case 2:
+            return BRICK;
+        case 3:
+            return SHEEP;
+        case 4:
+            return WHEAT;
+        default:
+            return NONE;
+    }
+}
+
+bool CatanGame::tradeValues(vector<pair<resource, int>>* values) {
+    cout << "Please enter the number of resources you want to trade: ";
+    int n;
+    cin >> n;
+    if (n < 0 || n > 4) {
+        cout << "Invalid number of resources" << endl;
+        return false;
+    }
+    cout << "resources index: 0 = STONE, 1 = WOOD, 2 = BRICK, 3 = SHEEP, 4 = WHEAT" << endl;
+    for (int i = 0; i < n; i++) {
+        cout << "Please enter the resource you want to trade: ";
+        int res;
+        cin >> res;
+        if (res < 0 || res > 4) {
+            cout << "Invalid resource" << endl;
+            return false;
+        }
+        resource r = intToResource(res);
+        cout << "Please enter the amount of " << getResourceName(res) << " you want to trade: ";
+        int amount;
+        cin >> amount;
+        if (amount < 0) {
+            cout << "Invalid amount" << endl;
+            return false;
+        }
+        pair<resource, int> value = {r, amount};
+    }
+    return values;
+}
+
+bool CatanGame::makeAnOffer(int playerId, vector<pair<resource, int>> give, vector<pair<resource, int>> receive) {
+    Player current = players[playerId];
+    int otherPlayerId;
+    cout << "Please enter the player id you want to make an offer to: ";
+    cin >> otherPlayerId;
+    if (otherPlayerId < 0 || otherPlayerId > 2 || otherPlayerId == playerId) {
+        cout << "Invalid player id" << endl;
+        return false;
+    }
+    Player other = players[otherPlayerId];
+    for (int i = 0; i < give.size(); i++) {
+        if (current.getResource(give[i].first) < give[i].second) {
+            cout << "You don't have enough " << getResourceName(give[i].first) << endl;
+            return false;
+        }
+    }
+    cout << "public display" << endl;
+    cout << "Player " << current.getColor() << current.getOwner() << "\033[0m" << " wants to give:" << endl;
+    for (int i = 0; i < give.size(); i++) {
+        cout << give[i].second << " " << getResourceName(give[i].first) << endl;
+    }
+
+    cout << "to player " << other.getColor() << other.getOwner() << "\033[0m" << " in exchange for:" << endl;
+    for (int i = 0; i < receive.size(); i++) {
+        cout << receive[i].second << " " << getResourceName(receive[i].first) << endl;
+    }
+    cout << "Do you accept the offer? (y/n): ";
+    char answer;
+    cin >> answer;
+    if (answer == 'y') {
+        for (int i = 0; i < receive.size(); i++) {
+            if (other.getResource(receive[i].first) < receive[i].second) {
+                cout << "The other player doesn't have enough " << getResourceName(receive[i].first) << endl;
+                return false;
+            }
+        }
+        makeTrade(playerId, give, otherPlayerId, receive);
+        cout << "Trade successful" << endl;
+        for (int i = 0; i < 3; i++) {
+            cout << players[i].getColor() << players[i].getOwner() << "'s display:" << "\033[0m" << endl;
+            players[i].displayResources();
+        }
+        return true;
+    }
+    cout << "Trade declined" << endl;
+    return false;
+}
+
+void CatanGame::makeTrade(int playerId, vector<pair<resource, int>> give, int otherPlayerId, vector<pair<resource, int>> receive) {
+    Player current = players[playerId];
+    Player other = players[otherPlayerId];
+    for (int i = 0; i < give.size(); i++) {
+        for (int j = 0; j < give[i].second; j++) {
+            current.decrementResource(give[i].first);
+            other.incrementResource(give[i].first);
+        }
+    }
+    for (int i = 0; i < receive.size(); i++) {
+        for (int j = 0; j < receive[i].second; j++) {
+            other.decrementResource(receive[i].first);
+            current.incrementResource(receive[i].first);
+        }
+    }
+}
+
+bool CatanGame::victroryCheck(int playerId) {
+    if (players[playerId].getVictoryPoints() >= 10) {
+        cout << "Player " << players[playerId].getColor() << players[playerId].getOwner() << "\033[0m" << " wins!" << endl;
+        return true;
+    }
+    return false;
 }
 
 int CatanGame::play() {
@@ -313,11 +566,94 @@ int CatanGame::play() {
     prepRound();
     shuffleCards();
     int tern = 0;
+    bool keepTern = true;
     bool keepPlaying = true;
-    while (keepPlaying) {
-        tern = tern % 3;
-        // cout << players[tern].getColor() << players[tern].getOwner() << "'s turn" << "\033[0m" << endl;
+    vector<pair<resource, int>> give = {};
+    vector<pair<resource, int>> receive = {};
+    int choice , settlementId, roadId, cityId, cardIndex;
 
+    while (keepPlaying) {
+        keepTern = true;
+        tern = tern % 3;
+        Player player = players[tern];
+        cout << player.getColor() << player.getOwner() << "'s turn" << "\033[0m" << endl;
+        cout << "Press any key to roll the dice" << endl;
+        char c;
+        cin >> c;
+        int dice = diceRoll();
+        cout << "Dice roll: " << dice << endl;
+        if (dice == 7) {
+            diceRoll_7();
+        } else {
+            distributeResources(dice);
+        }
+        while (keepTern) {
+            cout << player.getColor() << player.getOwner() << "'s display:" << "\033[0m" << endl;
+            cout << "1. Build Settlement" << endl;
+            cout << "2. Build Road" << endl;
+            cout << "3. Build City" << endl;
+            cout << "4. Buy Card" << endl;
+            cout << "5. Play Card" << endl;
+            cout << "6. Make an offer" << endl;
+            cout << "7. Display board" << endl;
+            cout << "8. Display resources" << endl;
+            cout << "9. End turn" << endl;
+
+            cin >> choice;
+
+            switch (choice) {
+                case 1:
+                    cout << "Please enter the settlement id: ";
+                    cin >> settlementId;
+                    buildSettlement(tern, settlementId);
+                    break;
+                case 2:
+                    cout << "Please enter the road id: ";
+                    cin >> roadId;
+                    buildRoad(tern, roadId);
+                    break;
+                case 3:
+                    cout << "Please enter the settlement id: ";
+                    cin >> cityId;
+                    buildCity(tern, cityId);
+                    break;
+                case 4:
+                    buyCard(tern);
+                    break;
+                case 5:
+                    cardIndex = getCardIndex(tern);
+                    if (cardIndex != -1) {
+                        playCard(tern, player.removeCard(cardIndex));
+                    }
+                    break;
+                case 6:
+                    cout << "Please enter the resources you want to give" << endl;
+                    if (tradeValues(&give)) {
+                        cout << "Please enter the resources you want to receive" << endl;
+                        if (tradeValues(&receive)) {
+                            makeAnOffer(tern, give, receive);
+                        }
+                    }
+
+                    break;
+                case 7:
+                    displayBoard();
+                    break;
+                case 8:
+                    player.displayResources();
+                    break;
+                case 9:
+                    keepTern = false;
+                    tern++;
+                    if (victroryCheck(tern)) {
+                        keepPlaying = false;
+                    }
+                    break;
+                default:
+                    cout << "Invalid choice" << endl;
+                    break;
+            }
+        }
     }
     return 0;
 }

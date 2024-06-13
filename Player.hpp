@@ -23,6 +23,11 @@ class Player {
     void displayCards();
     string getColor();
     string getOwner();
+    type removeCard(int index);
+
+    int getCardCount(){
+        return cards.size();
+    }
 
     void setId(owner id){
         this->id = id;

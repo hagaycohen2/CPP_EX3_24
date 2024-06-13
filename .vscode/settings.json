@@ -2,7 +2,8 @@
   "files.associations": {
     "vector": "cpp",
     "ostream": "cpp",
-    "string": "cpp"
+    "string": "cpp",
+    "iostream": "cpp"
   },
   "makefile.launchConfigurations": [
     {

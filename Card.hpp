@@ -10,12 +10,15 @@ enum type { KNIGHT,
             VICTORY_POINT,
             ROAD_BUILDING,
             MONOPOLY,
-            YEAR_OF_PLENTY
+            YEAR_OF_PLENTY,
+            GENERIC
 };
 
 class Card {
    public:
-    type getCardType();
+    type getCardType(){
+        return GENERIC;
+    }
     void display(){};
 };
 
