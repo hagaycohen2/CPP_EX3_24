@@ -13,7 +13,7 @@ void CatanGame::init() {
     }
 
     for (int i = 0; i < 11; i++) {
-        paiment[i] = {};
+        payment[i] = {};
     }
 
     settlements[0].load(0, owner::EMPTY, nullptr, &settlements[4], &settlements[3], nullptr, &roads[1], &roads[0],
@@ -242,13 +242,13 @@ int CatanGame::diceRoll() {
 
 void CatanGame::distributeResources(int diceRoll) {
     diceRoll -= 2;
-    for (int i = 0; i < paiment[diceRoll].size(); i++) {
-        if (paiment[diceRoll][i].first == owner::YELLOW) {
-            players[YELLOW].incrementResource(paiment[diceRoll][i].second);
-        } else if (paiment[diceRoll][i].first == owner::BLUE) {
-            players[BLUE].incrementResource(paiment[diceRoll][i].second);
-        } else if (paiment[diceRoll][i].first == owner::RED) {
-            players[RED].incrementResource(paiment[diceRoll][i].second);
+    for (int i = 0; i < payment[diceRoll].size(); i++) {
+        if (payment[diceRoll][i].first == owner::YELLOW) {
+            players[YELLOW].incrementResource(payment[diceRoll][i].second);
+        } else if (payment[diceRoll][i].first == owner::BLUE) {
+            players[BLUE].incrementResource(payment[diceRoll][i].second);
+        } else if (payment[diceRoll][i].first == owner::RED) {
+            players[RED].incrementResource(payment[diceRoll][i].second);
         }
     }
 }

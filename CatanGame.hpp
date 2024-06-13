@@ -15,7 +15,7 @@ class CatanGame{
     int knightCount[3];
     Settlement settlements[54];
     Road roads[72];
-    vector<pair<owner, resource>> paiment[11];
+    vector<pair<owner, resource>> payment[11];// exsmple: payment[3] = { {YELLOW, WOOD}, {RED, BRICK} }
     vector<Card> cards;  // 3 knights, 4 victory points, 2 road building, 2 monopoly, 2 year of plenty
 
     void init();
