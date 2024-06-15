@@ -45,7 +45,6 @@ int Player::getTotResources() {
 }
 
 void Player::displayResources() {
-    cout << "Player: " << this->getOwner() << "Resources: "<< endl;
     for (int i = 0; i < 5; i++) {
         cout << getResourceName(i) << ": ";
         cout << this->resources[i] << " ";
@@ -54,9 +53,8 @@ void Player::displayResources() {
 }
 
 void Player::displayCards() {
-    cout << "Player: " << this->getOwner() << "Cards: "<< endl;
     for (int i = 0; i < this->cards.size(); i++) {
-        cout << "Card " << i << ": ";
+        cout << "Card " << i << ":\n";
        this->cards[i].display() ;
     }
 }

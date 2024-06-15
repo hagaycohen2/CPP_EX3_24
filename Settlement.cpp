@@ -32,6 +32,7 @@ bool Settlement::occupationAtempt(owner player) {
     for (int i = 3; i < 6; i++) {
         if (neighborhood[i] != nullptr && neighborhood[i]->getOwner() == player) {
             this->setOwner(player);
+            cout << "Settlement " << this->getId() << " was occupied by player " << player << endl;
             return true;
         }
     }
@@ -55,6 +56,7 @@ bool Settlement::preOccupationAtempt(owner player) {
         }
     }
     this->setOwner(player);
+    cout << "Settlement " << this->getId() << " was occupied by player " << player << endl;
     return true;
 }
 

@@ -2,10 +2,10 @@
 
 int main() {
     cout << "Welcome to Catan!" << endl;
-    cout << "The game is about to start!!!" << endl;
+    cout << "This will be a demo of one round of the game" << endl;
+    cout << "If you want to play the full game, please run `make run`" << endl;
     CatanGame game;
-    game.play();
+    game.demo();
 
     return 0;
 }
-
