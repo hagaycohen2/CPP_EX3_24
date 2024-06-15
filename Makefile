@@ -28,6 +28,6 @@ play: $(COMMON_OBJECTS) $(PLAY_OBJECTS)
 	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
-	$(RM) main $(COMMON_OBJECTS) $(MAIN_OBJECTS) $(PLAY_OBJECTS)
+	$(RM) main play $(COMMON_OBJECTS) $(MAIN_OBJECTS) $(PLAY_OBJECTS)
 
 .PHONY: run clean main play catan
