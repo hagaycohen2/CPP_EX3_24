@@ -1,3 +1,9 @@
+/**
+ * Authors: Hagay Cohen
+ * 
+ */
+
+
 #include "Card.hpp"
 
 Card::Card(type t){
