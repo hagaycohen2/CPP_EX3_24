@@ -785,7 +785,7 @@ int CatanGame::play() {
                 case 5:
                     cardIndex = playerCards(tern);
                     if (cardIndex != -1) {
-                        playCard(tern, player.removeCard(cardIndex));
+                        playCard(tern, player.removeCard(cardIndex)); // play card and remove it from player's hand
                     }
                     break;
                 case 6:
@@ -995,3 +995,4 @@ int CatanGame::demo() {
 
     return 0;
 }
+

@@ -37,13 +37,13 @@ class CatanGame {
     void distributeResources(int dice);
     void addPayment(owner player, pair<int, resource>* resourceVec); // add resources to the payment vector
 
-    bool buildSettlement(int playerId, int settlement_id);
+    bool buildSettlement(int playerId, int settlement_id); // return true if the settlement was built (checking resources and if the location is valid)
     bool buildRoad(int playerId, int road_id);
     bool buildCity(int playerId, int settlement_id);
 
-    bool buyCard(int playerId);
-    int playerCards(int playerId);
-    void playCard(int playerId, type card);
+    bool buyCard(int playerId); // return true if the card was bought
+    int playerCards(int playerId); // display the player's cards and return a card index if the player picked one
+    void playCard(int playerId, type card); 
     void playMonopoly(int playerId);
     void playYearOfPlenty(int playerId);
     void playRoadBuilding(int playerId);
@@ -53,10 +53,10 @@ class CatanGame {
     bool makeAnOffer(int playerId, vector<pair<resource, int>>& give, vector<pair<resource, int>>& receive);
     void makeTrade(int playerId, vector<pair<resource, int>>& give, int otherPlayerId, vector<pair<resource, int>>& receive);
 
-    bool victroryCheck(int playerId);
+    bool victroryCheck(int playerId);// update the knight count and check if the player won
 
    public:
     CatanGame(); // constructor
     int play(); // main game loop, all user input will be here, incapsulate the game
-    int demo(); // demo of one round of the game
+    int demo(); // demo of the game
 };

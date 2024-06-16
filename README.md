@@ -41,6 +41,8 @@ Plesae note that the game is designed to be played in the terminal, and the user
 - `CatanGame`: The main class that controls the game's flow, including setup, rounds, and checking for victory conditions.
 - `Player`: Represents a player in the game, holding information about resources, cards, and points.
 - `Card`: Represents the development cards that players can buy during the game.
+
+Note: I chose to emplement the cards whithout inheritance because the cards are not the ones that activly interact with the game board. they are more like a resource that the player can use.
 - `Settlement` and `Road`: Represent the buildings that players can construct on the game board.
 - `CatanObject`: A base class for any object that can be placed on the game board, such as settlements and roads.
 
