@@ -1,3 +1,6 @@
+# Authors: Hagay Cohen
+# Email: hagaycohen2@gmail.com
+
 
 
 CXX = clang++

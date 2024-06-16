@@ -1,3 +1,8 @@
+/**
+ * Authors: Hagay Cohen
+ * Email: hagaycohen2@gmail.com
+ */
+
 #include "Settlement.hpp"
 
 void Settlement::load(int id, owner objowner, CatanObject* s1, CatanObject* s2, CatanObject* s3, CatanObject* r1, CatanObject* r2, CatanObject* r3,
@@ -32,7 +37,7 @@ bool Settlement::occupationAtempt(owner player) {
     for (int i = 3; i < 6; i++) {
         if (neighborhood[i] != nullptr && neighborhood[i]->getOwner() == player) {
             this->setOwner(player);
-            cout << "Settlement " << this->getId() << " was occupied by player " << player << endl;
+            cout << "Settlement " << this->getId() << " was occupied succesfuly" << endl;
             return true;
         }
     }
@@ -56,9 +61,6 @@ bool Settlement::preOccupationAtempt(owner player) {
         }
     }
     this->setOwner(player);
-    cout << "Settlement " << this->getId() << " was occupied by player " << player << endl;
+    cout << "Settlement " << this->getId() << " was occupied succesfuly" << endl;
     return true;
 }
-
-    
-

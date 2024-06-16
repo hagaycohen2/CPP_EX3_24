@@ -1,3 +1,8 @@
+/**
+ * Authors: Hagay Cohen
+ * Email: hagaycohen2@gmail.com
+ */
+
 #include "CatanGame.hpp"
 
 #include "Card.hpp"
@@ -7,8 +12,8 @@ CatanGame::CatanGame() {
     players[0].setId(owner::YELLOW);
     players[1].setId(owner::BLUE);
     players[2].setId(owner::RED);
-    cards = {Card(KNIGHT),Card(KNIGHT),Card(KNIGHT),Card(VICTORY_POINT),Card(VICTORY_POINT),Card(VICTORY_POINT),Card(VICTORY_POINT),
-             Card(ROAD_BUILDING),Card(ROAD_BUILDING),Card(MONOPOLY),Card(MONOPOLY),Card(YEAR_OF_PLENTY),Card(YEAR_OF_PLENTY)};
+    cards = {Card(KNIGHT), Card(KNIGHT), Card(KNIGHT), Card(VICTORY_POINT), Card(VICTORY_POINT), Card(VICTORY_POINT), Card(VICTORY_POINT),
+             Card(ROAD_BUILDING), Card(ROAD_BUILDING), Card(MONOPOLY), Card(MONOPOLY), Card(YEAR_OF_PLENTY), Card(YEAR_OF_PLENTY)};
 }
 
 void CatanGame::init() {
@@ -20,7 +25,7 @@ void CatanGame::init() {
         payment[i] = {};
     }
 
-   cout << "Initializing the game board..." << endl;
+    cout << "Initializing the game board..." << endl;
 
     settlements[0].load(0, owner::EMPTY, nullptr, &settlements[4], &settlements[3], nullptr, &roads[1], &roads[0],
                         {10, resource::STONE}, {0, resource::NONE}, {0, resource::NONE});
@@ -214,6 +219,8 @@ void CatanGame::shuffleCards() {
         cards[i] = cards.back();
         cards.pop_back();
     }
+    cards.push_back(cards[0]);
+    cards.erase(cards.begin());
 }
 
 void CatanGame::displayBoard() {
@@ -301,6 +308,35 @@ int CatanGame::diceRoll() {
 }
 
 void CatanGame::diceRoll_7() {
+    for (int i = 0; i < 3; i++) {
+        int count = players[i].getTotResources();
+        if (count > 7) {
+            cout << players[i].getColor() << players[i].getOwner() << "\033[0m" << " has " << count << " resources" << endl;
+            cout << players[i].getColor() << players[i].getOwner() << "`s display:" << "\033[0m" << endl;
+            players[i].displayResources();
+            cout << "You have " << count << " resources, please discard " << count / 2 << " resources" << endl;
+            cout << "resources index: 0 = STONE, 1 = WOOD, 2 = BRICK, 3 = SHEEP, 4 = WHEAT" << endl;
+            count /= 2;
+            while (count > 0) {
+                cout << "Please enter the resource you want to discard, insert resource index: ";
+                int res;
+                cin >> res;
+                if (res < 0 || res > 4) {
+                    cout << "Invalid resource id" << endl;
+                } else {
+                    resource resource = intToResource(res);
+                    if (players[i].getResource(resource) > 0) {
+                        players[i].decrementResource(resource);
+                        count--;
+                    } else {
+                        cout << "You don't have that resource" << endl;
+                    }
+                }
+            }
+            cout << "Resources discarded" << endl;
+            players[i].displayResources();
+        }
+    }
 }
 
 void CatanGame::distributeResources(int diceRoll) {
@@ -661,6 +697,10 @@ void CatanGame::makeTrade(int playerId, vector<pair<resource, int>>& give, int o
 }
 
 bool CatanGame::victroryCheck(int playerId) {
+    if (knightCount[playerId] >= 3) {
+        players[playerId].incrementVictoryPoints();
+        cout << "Player " << players[playerId].getColor() << players[playerId].getOwner() << "\033[0m" << " has the largest army" << endl;
+    }
     if (players[playerId].getVictoryPoints() >= 10) {
         cout << "Player " << players[playerId].getColor() << players[playerId].getOwner() << "\033[0m" << " wins!" << endl;
         return true;
@@ -782,10 +822,17 @@ int CatanGame::play() {
 }
 
 int CatanGame::demo() {
+    char c;
+    vector<pair<resource, int>> give = {};
+    vector<pair<resource, int>> receive = {};
+
     cout << "Demo" << endl;
     cout << "Prepping round" << endl;
     init();
     displayBoard();
+
+    cout << "Press any key to start the prepped round" << endl;
+    cin >> c;
 
     // player 0
     settlements[19].preOccupationAtempt(YELLOW);
@@ -850,6 +897,101 @@ int CatanGame::demo() {
     cout << "End of prepped round" << endl;
 
     shuffleCards();
+
+    cout << "\n In the following rounds the dice rolls will be forced for demonstration purposes" << endl;
+
+    cout << "Player YELLOW's turn" << endl;
+    cout << "Press any key to roll the dice" << endl;
+    cin >> c;
+    int dice = 6;
+    cout << "\nDice roll: " << dice << endl;
+    cout << "Resources distribution" << endl;
+    distributeResources(dice);
+    for (int i = 0; i < 3; i++) {
+        cout << players[i].getColor() << players[i].getOwner() << "'s display:" << "\033[0m" << endl;
+        players[i].displayResources();
+    }
+    cout << "Player YELLOW's will try to build a settlement on 13 (unsuccesfuly)" << endl;
+    buildSettlement(YELLOW, 13);
+    cout << "\nPlayer YELLOW's will offer a trade to player BLUE" << endl;
+    give = {{BRICK, 1}};
+    receive = {{WHEAT, 1}};
+    cout << "public display" << endl;
+    cout << "Player " << players[0].getColor() << "Yellow" << "\033[0m" << " wants to give:" << endl;
+    for (int i = 0; i < give.size(); i++) {
+        cout << give[i].second << " " << getResourceName(give[i].first) << endl;
+    }
+
+    cout << "to player " << players[1].getColor() << "Blue" << "\033[0m" << " in exchange for:" << endl;
+    for (int i = 0; i < receive.size(); i++) {
+        cout << receive[i].second << " " << getResourceName(receive[i].first) << endl;
+    }
+
+    cout << "Do you accept the offer? (y/n): ";
+    cout << "(let's say BLUE accepts)" << endl;
+    makeTrade(YELLOW, give, 1, receive);
+    cout << "Trade successful" << endl;
+    for (int i = 0; i < 3; i++) {
+        cout << players[i].getColor() << players[i].getOwner() << "'s display:" << "\033[0m" << endl;
+        players[i].displayResources();
+    }
+
+    cout << "(in case of decline or lack of resources the trade would have failed and the resources would stay the same)\n"
+         << endl;
+
+    cout << "Player YELLOW's now wants to buy a card" << endl;
+    buyCard(YELLOW);
+    cout << "Player YELLOW's display" << endl;
+    players[YELLOW].displayResources();
+
+    cout << "Player YELLOW's turn ends\n"
+         << endl;
+
+    cout << "Player BLUE's turn" << endl;
+    cout << "Press any key to roll the dice" << endl;
+    cin >> c;
+    dice = 4;
+    cout << "\nDice roll: " << dice << endl;
+    cout << "Resources distribution" << endl;
+    distributeResources(dice);
+    for (int i = 0; i < 3; i++) {
+        cout << players[i].getColor() << players[i].getOwner() << "'s display:" << "\033[0m" << endl;
+        players[i].displayResources();
+    }
+
+    cout << "Player BLUE's will try to build a road on 45 (succesfuly)" << endl;
+    buildRoad(BLUE, 45);
+    players[BLUE].displayResources();
+    cout << "Player BLUE's will try to build a settlement on 30 (unsuccesfuly)" << endl;
+    buildSettlement(BLUE, 30);
+
+    cout << "(for demonstration purposes we will increase the amount of resources of player BLUE)" << endl;
+    players[BLUE].incrementResource(WOOD);
+    players[BLUE].incrementResource(BRICK);
+
+    cout << "Player BLUE's will try to build a settlement on 30 (succesfuly)" << endl;
+    buildSettlement(BLUE, 30);
+    players[BLUE].displayResources();
+
+    cout << "Player BLUE's turn ends\n"
+         << endl;
+
+         cout << "(to keep the demo short and demonstrate 7 dice roll we will increase the amount of resources of player RED)" << endl;
+    players[RED].incrementResource(WOOD);
+
+    cout << "Player RED's turn" << endl;
+    cout << "Press any key to roll the dice" << endl;
+    cin >> c;
+    dice = 7;
+    cout << "\nDice roll: " << dice << endl;
+    cout << "(you will play as player RED)" << endl;
+    diceRoll_7();
+
+    cout << "Player RED's turn ends\n"
+         << endl;
+
+    cout << "This is the end of our demonstration, in the full game you would continue playing until a player reaches 10 victory points\n"
+         << endl; 
 
     return 0;
 }

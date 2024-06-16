@@ -1,3 +1,8 @@
+/**
+ * Authors: Hagay Cohen
+ * Email: hagaycohen2@gmail.com
+ */
+
 #include "CatanGame.hpp"
 
 int main() {

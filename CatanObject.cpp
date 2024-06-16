@@ -1,3 +1,8 @@
+/**
+ * Authors: Hagay Cohen
+ * Email: hagaycohen2@gmail.com
+ */
+
 #include "CatanObject.hpp"
 
  void CatanObject:: setNeighborhood(CatanObject* neighborhood[6]) {
